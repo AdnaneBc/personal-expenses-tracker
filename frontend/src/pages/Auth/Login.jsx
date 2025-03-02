@@ -1,7 +1,26 @@
 import { Link } from "react-router-dom";
 import img1 from "../../assets/img1.webp";
+import { useState } from "react";
+import Input from "../../components/Input";
+import { validateEmail } from "../../utils/helper";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+    if (!password) {
+      setError("Please enter your password");
+      return;
+    }
+    setError("");
+    //Login API call
+  };
   return (
     <>
       <div className="flex h-screen w-full justify-center items-center">
@@ -13,31 +32,32 @@ const Login = () => {
           <p className="text-sm text-gray-800">
             Please enter your details to log in
           </p>
-          <form className="flex flex-col w-3/4 py-8 gap-2">
-            <label htmlFor="email" className="text-sm text-gray-700">
-              Email Address
-            </label>
-            <input
-              className="bg-gray-100 py-3 px-5 rounded mb-5 text-sm text-gray-700"
+          <form
+            className="flex flex-col w-3/4 py-8 gap-2"
+            onSubmit={handleLogin}
+          >
+            <Input
               type="email"
-              placeholder="john@example.com "
-              id="email"
+              placeHolder="john@example.com"
+              label="Email Address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-            <label htmlFor="password" className="text-sm text-gray-800">
-              Password
-            </label>
-            <input
-              className="bg-gray-100 py-3 px-5 rounded mb-5 text-sm text-gray-700"
+            <Input
               type="password"
-              placeholder="Min 8 characters"
-              id="password"
+              placeHolder="Password"
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
             <button
               type="submit"
               className="bg-purple-700 text-white p-2 rounded text-sm  mb-5"
             >
               LOGIN
             </button>
+
             <span className="text-sm">
               Don't have an account ?{" "}
               <Link to="/register" className="underline text-blue-700">
